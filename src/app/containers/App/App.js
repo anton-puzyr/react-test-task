@@ -8,7 +8,8 @@ import './App.scss';
 class App extends Component {
   state = {
     data: {},
-    coordinatesLine: []
+    coordinatesLine: [],
+    coordinatesBar: []
   };
 
   componentDidMount() {
@@ -23,6 +24,10 @@ class App extends Component {
       const yLine = this.sanitizeData(value);
       const xLine = this.timestampToDate(timestamp);
 
+      (() => {
+        console.log(Math.round(value));
+      })();
+
       this.setState({
         coordinatesLine: [...prevState.coordinatesLine, { x: xLine, y: yLine }]
       });
@@ -34,12 +39,12 @@ class App extends Component {
   timestampToDate = date => new Date(date);
 
   render() {
-    const { coordinatesLine } = this.state;
+    const { coordinatesLine, coordinatesBar } = this.state;
 
     return (
       <div className="app">
         <LineChart data={coordinatesLine} />
-        <BarChart />
+        <BarChart data={coordinatesBar} />
       </div>
     );
   }
