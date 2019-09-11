@@ -9,27 +9,37 @@ class App extends Component {
   state = {
     data: {},
     coordinatesLine: [],
-    coordinatesBar: []
+    coordinatesBar: [],
+    xRange: []
   };
 
   componentDidMount() {
     const socket = socketIOClient.connect('http://localhost:3000');
     socket.on('data', data => this.setState({ data }));
+
+    const xRange = this.rangeBarCategories(-100, 100, 10);
+
+    this.setState({ xRange });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
-      const { data: { value, timestamp } } = this.state;
+      const { data: { value, timestamp }, xRange } = this.state;
 
+      /* Configure LineChart */
       const yLine = this.sanitizeData(value);
       const xLine = this.timestampToDate(timestamp);
 
-      (() => {
-        console.log(Math.round(value));
-      })();
-
       this.setState({
         coordinatesLine: [...prevState.coordinatesLine, { x: xLine, y: yLine }]
+      });
+
+      /* Configure BarChart */
+      xRange.forEach(element => {
+        if (this.isValueInRange(value, element[0], element[1])) {
+          const coordinates = Object.assign({}, { x: element.join(' - '), y: value });
+          this.setState({ coordinatesBar: [...prevState.coordinatesBar, coordinates] });
+        }
       });
     }
   }
@@ -38,9 +48,22 @@ class App extends Component {
 
   timestampToDate = date => new Date(date);
 
-  render() {
-    const { coordinatesLine, coordinatesBar } = this.state;
+  rangeBarCategories = (start, end, step = 1) => {
+    let a = [];
 
+    while (start < end) {
+      a.push([start, start += step]);
+    }
+
+    return a;
+  };
+
+  isValueInRange = (x, min, max) => x >= min && x <= max;
+
+  render() {
+    const { coordinatesLine, coordinatesBar, xRange } = this.state;
+    console.log(xRange);
+    console.warn(coordinatesBar);
     return (
       <div className="app">
         <LineChart data={coordinatesLine} />
