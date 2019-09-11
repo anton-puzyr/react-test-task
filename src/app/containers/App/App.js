@@ -7,7 +7,8 @@ import './App.scss';
 
 class App extends Component {
   state = {
-    data: {}
+    data: {},
+    coordinatesLine: []
   };
 
   componentDidMount() {
@@ -15,12 +16,29 @@ class App extends Component {
     socket.on('data', data => this.setState({ data }));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.data !== this.state.data) {
+      const { data: { value, timestamp } } = this.state;
+
+      const yLine = this.sanitizeData(value);
+      const xLine = this.timestampToDate(timestamp);
+
+      this.setState({
+        coordinatesLine: [...prevState.coordinatesLine, { x: xLine, y: yLine }]
+      });
+    }
+  }
+
+  sanitizeData = value => Math.round(value);
+
+  timestampToDate = date => new Date(date);
+
   render() {
-    const { data } = this.state;
+    const { coordinatesLine } = this.state;
 
     return (
       <div className="app">
-        <LineChart data={data} />
+        <LineChart data={coordinatesLine} />
         <BarChart />
       </div>
     );
