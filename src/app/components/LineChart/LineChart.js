@@ -11,17 +11,36 @@ const axisStyles = {
 };
 
 const LineChart = ({ data }) => {
+  const initialDate = () => {
+    const dt = new Date();
+    return `${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`;
+  };
+
+  const limitTickValues = coordinates => coordinates.length > 15
+    ? coordinates
+      .filter((item, idx) => {
+        if (idx % Math.floor(coordinates.length / 15) === 0) {
+          return item.x;
+        }
+      }).map(item => item.x)
+    : coordinates.map(item => item.x);
+
   return (
     <div>
       <XYPlot
-        xType="time"
+        xType="ordinal"
         width={800}
-        height={500}
-        margin={{ bottom: 70 }}
+        height={400}
+        margin={{ bottom: 100, left: 100 }}
       >
         <HorizontalGridLines />
-        <LineSeries data={data} />
-        <XAxis title="Time" tickLabelAngle={-45} style={axisStyles} />
+        <LineSeries data={data && data.length ? data : [{ x: initialDate(), y: 0 }]} />
+        <XAxis
+          title="Time"
+          tickLabelAngle={-45}
+          style={axisStyles}
+          tickValues={limitTickValues(data)}
+        />
         <YAxis title="Value" style={axisStyles} />
       </XYPlot>
     </div>

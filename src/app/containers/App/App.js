@@ -24,29 +24,44 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
-      const { data: { value, timestamp }, xRange } = this.state;
+      const { data: { value, timestamp }, xRange, coordinatesBar } = this.state;
 
-      /* Configure LineChart */
-      const yLine = this.sanitizeData(value);
-      const xLine = this.timestampToDate(timestamp);
-
-      this.setState({
-        coordinatesLine: [...prevState.coordinatesLine, { x: xLine, y: yLine }]
-      });
+      this.updateLineChart(value, timestamp);
 
       /* Configure BarChart */
       xRange.forEach(element => {
         if (this.isValueInRange(value, element[0], element[1])) {
-          const coordinates = Object.assign({}, { x: element.join(' - '), y: value });
+          let coordinates = Object.assign({}, { x: element, y: value });
           this.setState({ coordinatesBar: [...prevState.coordinatesBar, coordinates] });
+
+          // coordinatesBar.forEach((arr, index) => {
+          //   if (arr.x === element) {
+          //     console.warn('collision: ', arr.x, element, index);
+          //   }
+          // });
         }
       });
     }
   }
 
+  updateLineChart = (value, timestamp) => {
+    const yLine = this.sanitizeData(value);
+    const xLine = this.timestampToDate(timestamp);
+
+    this.setState(prevState => ({
+      coordinatesLine: [...prevState.coordinatesLine, { x: xLine, y: yLine }]
+    }));
+  };
+
   sanitizeData = value => Math.round(value);
 
-  timestampToDate = date => new Date(date);
+  timestampToDate = date => {
+    const dt = new Date(date);
+    const formattedDate = `${dt.getDate()}/${dt.getMonth() + 1}/${dt.getFullYear()}`;
+    const time = `${dt.getHours()}: ${dt.getMinutes()}: ${dt.getSeconds()}`;
+
+    return `${formattedDate} ${time}`;
+  };
 
   rangeBarCategories = (start, end, step = 1) => {
     let a = [];
@@ -61,9 +76,8 @@ class App extends Component {
   isValueInRange = (x, min, max) => x >= min && x <= max;
 
   render() {
-    const { coordinatesLine, coordinatesBar, xRange } = this.state;
-    console.log(xRange);
-    console.warn(coordinatesBar);
+    const { coordinatesLine, coordinatesBar } = this.state;
+
     return (
       <div className="app">
         <LineChart data={coordinatesLine} />

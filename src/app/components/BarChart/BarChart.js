@@ -12,13 +12,19 @@ const axisStyles = {
 
 const BarChart = ({ data }) => {
   return (
-    <XYPlot margin={{ bottom: 70 }} xType="ordinal" width={500} height={300}>
-      <VerticalGridLines />
-      <HorizontalGridLines />
-      <XAxis tickLabelAngle={-45} style={axisStyles} />
-      <YAxis style={axisStyles} />
-      <VerticalBarSeries data={data} />
-    </XYPlot>
+    <div className="bar-chart">
+      <XYPlot margin={{ bottom: 70, left: 100 }} xType="ordinal" width={800} height={400}>
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis tickLabelAngle={-45} style={axisStyles} />
+        <YAxis style={axisStyles} />
+        <VerticalBarSeries
+          data={data && data.length ?
+            data.map(e => ({ x: e.x.join(' - '), y: e.y }))
+            : [{ x: '0', y: 0 }]}
+        />
+      </XYPlot>
+    </div>
   );
 };
 

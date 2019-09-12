@@ -33,5 +33,26 @@ Charts should be updated in real time. **Please**, consider code style best prac
 5. Now you can connect to the server via [socket.io-client](https://socket.io/docs/client-api):
     - listen for `data` event
     - the payload format is `{ value: <float>, timestamp: <integer> }`
+    
+## Up and Running (Frontend)
+
+In the project directory run:
+    
+```sh
+yarn
+```
+    
+to install dependencies. Also run
+    
+```sh
+yarn dev
+```
+
+to start the webpack development server.
+    
+Open [http://localhost:4000](http://localhost:4000) to view app in the browser.
+
+The page will reload if you make code changes.<br>
+You will also see any lint errors in the console.
 
 # Good luck!
