@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import socketIOClient from 'socket.io-client';
+import cogoToast from 'cogo-toast';
 
 import LineChart from '../../components/LineChart';
 import BarChart from '../../components/BarChart';
+import Input from '../../components/shared/InputField';
 import './App.scss';
 
 class App extends Component {
@@ -10,7 +12,8 @@ class App extends Component {
     data: {},
     coordinatesLine: [],
     coordinatesBar: [],
-    xRange: []
+    xRange: [],
+    inputValue: null
   };
 
   componentDidMount() {
@@ -24,9 +27,10 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
-      const { data: { value, timestamp }, xRange, coordinatesBar } = this.state;
+      const { data: { value, timestamp }, xRange, coordinatesBar, inputValue } = this.state;
 
       this.updateLineChart(value, timestamp);
+      this.showAlert(inputValue, value);
 
       /* Configure BarChart */
       xRange.forEach(element => {
@@ -75,13 +79,29 @@ class App extends Component {
 
   isValueInRange = (x, min, max) => x >= min && x <= max;
 
+  handleChange = e => this.setState({ inputValue: e.target.value });
+
+  showAlert = (threshold, payload) => {
+    if (threshold && threshold.length && payload > threshold) {
+      cogoToast.warn(`Payload number is: ${payload.toFixed(2)}`, { position: 'top-right' });
+    }
+  };
+
   render() {
     const { coordinatesLine, coordinatesBar } = this.state;
 
     return (
       <div className="app">
-        <LineChart data={coordinatesLine} />
-        <BarChart data={coordinatesBar} />
+        <div className="threshold">
+          <div>
+            <LineChart data={coordinatesLine} />
+            <BarChart data={coordinatesBar} />
+          </div>
+          <div className="threshold__input-group">
+            <label htmlFor="threshold">Alert threshold</label>
+            <Input placeholder="Enter threshold" name="threshold" onChange={e => this.handleChange(e)} />
+          </div>
+        </div>
       </div>
     );
   }

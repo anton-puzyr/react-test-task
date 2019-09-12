@@ -1,5 +1,18 @@
 .app {
-  padding: 50px 100px;
+  padding: 50px;
   display: flex;
   flex-direction: column;
+
+  .threshold {
+    display: flex;
+    flex-direction: row;
+
+    &__input-group {
+      padding-left: 100px;
+    }
+  }
+}
+
+.ct-toast {
+  min-height: 20px;
 }

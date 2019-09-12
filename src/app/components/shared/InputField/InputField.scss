@@ -1,0 +1,33 @@
+.input-wrapper {
+  position: relative;
+
+  .custom-input {
+    height: 35px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    line-height: 19px;
+    letter-spacing: 0.2px;
+    font-weight: 600;
+    color: #191919;
+    padding: 0 15px;
+    width: 200px;
+    caret-color: #000000;
+    cursor: default;
+
+    &:hover {
+      cursor: default;
+      transition: 0.2s ease-out;
+      border-color: #ADDDE1;
+    }
+
+    &:focus {
+      cursor: text;
+      outline: none;
+      border-color: #ADDDE1;
+    }
+
+    &::placeholder {
+      color: #999999;
+    }
+  }
+}
