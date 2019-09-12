@@ -16,3 +16,9 @@
 .ct-toast {
   min-height: 20px;
 }
+
+.rv-xy-plot__axis__title:last-of-type {
+  text {
+    transform: translate(50px);
+  }
+}

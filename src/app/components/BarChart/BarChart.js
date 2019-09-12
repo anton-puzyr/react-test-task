@@ -11,16 +11,18 @@ const axisStyles = {
 };
 
 const BarChart = ({ data }) => {
+  const sortRanges = values => values.sort((a,b) => a.x > b.x ? 1 : b.x > a.x ? -1 : 0);
+
   return (
     <div className="bar-chart">
-      <XYPlot margin={{ bottom: 70, left: 100 }} xType="ordinal" width={800} height={400}>
+      <XYPlot margin={{ bottom: 70, left: 100, right: 50, top: 50 }} xType="ordinal" width={800} height={400}>
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis tickLabelAngle={-45} style={axisStyles} />
-        <YAxis style={axisStyles} />
+        <XAxis tickLabelAngle={-45} style={axisStyles} title="Range" />
+        <YAxis style={axisStyles} title="Amount" />
         <VerticalBarSeries
           data={data && data.length ?
-            data.map(e => ({ x: e.x.join(' - '), y: e.y }))
+            sortRanges(data).map(e => ({ x: e.x.join(' - '), y: e.y }))
             : [{ x: '0', y: 0 }]}
         />
       </XYPlot>

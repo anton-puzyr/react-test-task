@@ -54,5 +54,3 @@ Open [http://localhost:4000](http://localhost:4000) to view app in the browser.
 
 The page will reload if you make code changes.<br>
 You will also see any lint errors in the console.
-
-# Good luck!

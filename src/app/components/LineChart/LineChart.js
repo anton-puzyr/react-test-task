@@ -31,7 +31,7 @@ const LineChart = ({ data }) => {
         xType="ordinal"
         width={800}
         height={400}
-        margin={{ bottom: 100, left: 100 }}
+        margin={{ bottom: 100, left: 100, right: 50, top: 50 }}
       >
         <HorizontalGridLines />
         <LineSeries data={data && data.length ? data : [{ x: initialDate(), y: 0 }]} />
