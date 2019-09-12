@@ -13,7 +13,7 @@ class App extends Component {
     coordinatesLine: [],
     coordinatesBar: [],
     xRange: [],
-    inputValue: null
+    inputValue: ''
   };
 
   componentDidMount() {
@@ -31,20 +31,7 @@ class App extends Component {
 
       this.updateLineChart(value, timestamp);
       this.showAlert(inputValue, value);
-
-      /* Configure BarChart */
-      xRange.forEach(element => {
-        if (this.isValueInRange(value, element[0], element[1])) {
-          let coordinates = Object.assign({}, { x: element, y: value });
-          this.setState({ coordinatesBar: [...prevState.coordinatesBar, coordinates] });
-
-          // coordinatesBar.forEach((arr, index) => {
-          //   if (arr.x === element) {
-          //     console.warn('collision: ', arr.x, element, index);
-          //   }
-          // });
-        }
-      });
+      this.calculateAmountOfNumbers(xRange, coordinatesBar, value);
     }
   }
 
@@ -85,6 +72,25 @@ class App extends Component {
     if (threshold && threshold.length && payload > threshold) {
       cogoToast.warn(`Payload number is: ${payload.toFixed(2)}`, { position: 'top-right' });
     }
+  };
+
+  calculateAmountOfNumbers = (range, chartCoordinates, payload) => {
+    range.forEach(element => {
+      if (this.isValueInRange(payload, element[0], element[1])) {
+        let coordinates = Object.assign({}, { x: element, y: payload });
+
+        this.setState(prevState => ({ coordinatesBar: [...prevState.coordinatesBar, coordinates] }), () => {
+          chartCoordinates.forEach((arr, index) => {
+            if (arr.x === element) {
+              let array = [...chartCoordinates];
+              array.splice(index, 1, { x: element, y: arr.y + payload } );
+
+              this.setState({ coordinatesBar: array });
+            }
+          });
+        });
+      }
+    });
   };
 
   render() {

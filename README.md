@@ -34,7 +34,7 @@ Charts should be updated in real time. **Please**, consider code style best prac
     - listen for `data` event
     - the payload format is `{ value: <float>, timestamp: <integer> }`
     
-## Up and Running (Frontend)
+# Up and Running (Frontend)
 
 In the project directory run:
     
